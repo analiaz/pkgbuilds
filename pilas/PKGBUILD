@@ -2,7 +2,7 @@
 
 pkgname=pilas
 pkgver=0.90.30
-pkgrel=1
+pkgrel=2
 pkgdesc="An engine to make games in an easy way with Python."
 arch=('any')
 depends=('python2' 'setuptools' 'python2-pybox2d' 'python2-pyqt4')
@@ -18,5 +18,13 @@ build() {
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-  python2 setup.py install --root="$pkgdir"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" || return 1
+
+  cp -dr --preserve=mode,timestamp data/* \
+     $pkgdir/usr/lib/python2.7/site-packages/pilasengine/
+  install -Dm644 "data/pilasengine-icono.png" \
+          "$pkgdir/usr/share/pixmaps/pilasengine-icono.png"
+  install -Dm644 "debian/python-pilas.desktop" \
+          "$pkgdir/usr/share/applications/python-pilas.desktop"
+
 }
